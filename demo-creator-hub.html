@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Dashboard — Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="icon" href="logo.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0f0f0f;color:#e5e5e5;display:flex;min-height:100vh;-webkit-font-smoothing:antialiased}
+.demo-badge{position:fixed;bottom:12px;right:12px;z-index:999;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.25);color:#c084fc;padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;letter-spacing:0.04em;backdrop-filter:blur(8px);pointer-events:none}
+.sidebar{width:220px;background:#0a0a0a;border-right:1px solid rgba(255,255,255,0.06);padding:24px 16px;display:flex;flex-direction:column;gap:32px;flex-shrink:0}
+.sidebar h2{font-size:16px;font-weight:700;color:#c084fc;letter-spacing:-0.01em;padding-left:8px}
+.sidebar nav{display:flex;flex-direction:column;gap:4px}
+.sidebar nav a{padding:10px 12px;border-radius:8px;font-size:13px;font-weight:500;color:#888;text-decoration:none;transition:all .2s;display:flex;align-items:center;gap:10px}
+.sidebar nav a:hover{background:rgba(168,85,247,0.08);color:#e5e5e5}
+.sidebar nav a.active{background:rgba(168,85,247,0.12);color:#c084fc;font-weight:600}
+.sidebar .nav-icon{width:18px;height:18px;opacity:.6;flex-shrink:0}
+.main{flex:1;padding:24px 32px 32px;overflow-y:auto}
+.header-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-top:8px}
+.header-bar .search-wrap{position:relative;width:320px}
+.header-bar .search-wrap input{width:100%;padding:10px 16px 10px 40px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#e5e5e5;font-size:13px;outline:none;font-family:'Inter',sans-serif;transition:border-color .2s}
+.header-bar .search-wrap input:focus{border-color:rgba(168,85,247,0.3)}
+.header-bar .search-wrap .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:#555}
+.header-bar .user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#A855F7);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.header-bar .user-avatar svg{width:18px;height:18px;color:#fff}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px}
+.stat-card{padding:18px 20px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)}
+.stat-card .stat-val{font-size:22px;font-weight:700;color:#f5f5f5}
+.stat-card .stat-label{font-size:12px;color:#666;margin-top:4px}
+.stat-card.purple .stat-val{color:#c084fc}
+.stat-card.green .stat-val{color:#6ee7b7}
+.stat-card.blue .stat-val{color:#7dd3fc}
+.stat-card.orange .stat-val{color:#fcd34d}
+.section-title{font-size:15px;font-weight:600;color:#e5e5e5;margin-bottom:14px}
+.video-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:36px}
+.video-card{border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);transition:all .25s;cursor:pointer}
+.video-card:hover{transform:translateY(-3px);border-color:rgba(168,85,247,0.2);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+.video-thumb{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:20px;position:relative}
+.video-thumb .dur{position:absolute;bottom:6px;right:6px;font-size:11px;background:rgba(0,0,0,0.7);padding:2px 6px;border-radius:4px;color:#ccc}
+.video-info{padding:10px 12px 12px}
+.video-info h4{font-size:13px;font-weight:600;color:#e5e5e5;margin-bottom:3px;line-height:1.3}
+.video-info p{font-size:11px;color:#666}
+.reviews-section{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.review-card{padding:18px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)}
+.review-card .r-stars{font-size:13px;color:#fbbf24;margin-bottom:8px}
+.review-card .r-text{font-size:13px;color:#a3a3a3;line-height:1.6;margin-bottom:10px}
+.review-card .r-author{font-size:12px;color:#666}
+.review-card .r-author strong{color:#a3a3a3;font-weight:600}
+@media(max-width:1024px){
+.stats-row{grid-template-columns:repeat(2,1fr)}
+.video-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+.sidebar{display:none}
+.main{padding:20px 16px}
+.stats-row{grid-template-columns:1fr 1fr}
+.video-grid{grid-template-columns:1fr 1fr}
+.reviews-section{grid-template-columns:1fr}
+.header-bar .search-wrap{width:auto;flex:1;max-width:280px}
+}
+</style>
+</head>
+<body>
+<div class="demo-badge">Demo — Video Dashboard</div>
+<aside class="sidebar">
+<h2>Dashboard</h2>
+<nav>
+<a href="#" class="active"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Overview</a>
+<a href="#"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Videos</a>
+<a href="#"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Reviews</a>
+<a href="#"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>Analytics</a>
+<a href="#"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Settings</a>
+</nav>
+</aside>
+<div class="main">
+<div class="header-bar">
+<div class="search-wrap">
+<svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+<input type="text" placeholder="Search videos...">
+</div>
+<div class="user-avatar">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+</div>
+</div>
+<div class="stats-row">
+<div class="stat-card purple"><div class="stat-val">1.24M</div><div class="stat-label">Total Views</div></div>
+<div class="stat-card green"><div class="stat-val">48.2K</div><div class="stat-label">Subscribers</div></div>
+<div class="stat-card blue"><div class="stat-val">342</div><div class="stat-label">Videos</div></div>
+<div class="stat-card orange"><div class="stat-val">1.8K</div><div class="stat-label">Reviews</div></div>
+</div>
+<div class="section-title">Recent Uploads</div>
+<div class="video-grid">
+<div class="video-card">
+<div class="video-thumb" style="background:linear-gradient(135deg,#6d28d9,#7C3AED)"><span style="color:#fff">▶</span><span class="dur">12:34</span></div>
+<div class="video-info"><h4>How to Build a Full-Stack Web App</h4><p>14K views · 2 days ago</p></div>
+</div>
+<div class="video-card">
+<div class="video-thumb" style="background:linear-gradient(135deg,#0891b2,#06B6D4)"><span style="color:#fff">▶</span><span class="dur">8:21</span></div>
+<div class="video-info"><h4>UI Design Principles for Developers</h4><p>9.2K views · 5 days ago</p></div>
+</div>
+<div class="video-card">
+<div class="video-thumb" style="background:linear-gradient(135deg,#059669,#10B981)"><span style="color:#fff">▶</span><span class="dur">15:07</span></div>
+<div class="video-info"><h4>Advanced CSS Animation Techniques</h4><p>6.8K views · 1 week ago</p></div>
+</div>
+<div class="video-card">
+<div class="video-thumb" style="background:linear-gradient(135deg,#d97706,#F59E0B)"><span style="color:#fff">▶</span><span class="dur">22:15</span></div>
+<div class="video-info"><h4>Developer Tools Roundtable Discussion</h4><p>4.3K views · 2 weeks ago</p></div>
+</div>
+</div>
+<div class="section-title">Latest Reviews</div>
+<div class="reviews-section">
+<div class="review-card">
+<div class="r-stars">★★★★★</div>
+<div class="r-text">"The responsive layouts tutorial completely changed how I approach web design. Clear, concise, and incredibly practical."</div>
+<div class="r-author">— <strong>Alex R.</strong> · Subscriber</div>
+</div>
+<div class="review-card">
+<div class="r-stars">★★★★☆</div>
+<div class="r-text">"Great production quality and clear explanations. Would love a follow-up on performance optimization."</div>
+<div class="r-author">— <strong>Sam T.</strong> · Patron</div>
+</div>
+</div>
+</div>
+</body>
+</html>
